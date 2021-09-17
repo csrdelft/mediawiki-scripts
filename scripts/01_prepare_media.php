@@ -22,6 +22,8 @@ $newMediaDir = dirname(__FILE__) . '/../temp/media';
 
 $dokuwikiMediaDir = realpath($dokuwikidir . '/data/media');
 
+$skipNs = ['bestuur', 'speeltuin', 'wiki'];
+
 foreach(rsearch($dokuwikidir . '/data/media', '/.*/') as $file) {
     $realfile = realpath($file);
 
@@ -31,6 +33,14 @@ foreach(rsearch($dokuwikidir . '/data/media', '/.*/') as $file) {
         $newfile = str_replace('/', '_', $newfile);
         $newfile = str_replace('\\', '_', $newfile);
 
-        copy($file, $newMediaDir . '/' . $newfile);
+
+        $skip = false;
+        foreach ($skipNs as $skip) {
+            if (strpos($newfile, $skip) === 0) {
+                $skip = true;
+            }
+        }
+
+        if (!$skip) copy($file, $newMediaDir . '/' . $newfile);
     }
 }

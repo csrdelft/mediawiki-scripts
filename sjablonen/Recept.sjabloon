@@ -19,7 +19,7 @@
 |Typering=String
 |Gang=String
 |Omschrijving=String
-|Aantal_personen=Integer
+|Aantal_personen=String
 }}
 </noinclude><includeonly>{{#cargo_store: _table=recept}}{| border="0" cellpadding="4" cellspacing="4" style="margin-bottom: 5px;"
 ! Naam

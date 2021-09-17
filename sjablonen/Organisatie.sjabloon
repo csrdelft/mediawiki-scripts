@@ -1,0 +1,54 @@
+<noinclude>
+<templatedata>
+{
+	"params": {
+		"Organisatie": {
+			"required": true
+		},
+		"Doelgroep": {},
+		"Adres": {},
+		"Postcode": {},
+		"Plaats": {},
+		"Telefoon": {},
+		"Email": {},
+		"Website": {}
+	},
+	"description": "Dit sjabloon definieert een organisatie",
+	"format": "block"
+}
+</templatedata>
+{{#cargo_declare: _table=organisatie
+|Organisatie=String
+|Doelgroep=String
+|Adres=String
+|Postcode=String
+|Plaats=String
+|Telefoon=String
+|Email=String
+|Website=String
+}}
+</noinclude><includeonly>{{#cargo_store: _table=organisatie}}{| border="0" cellpadding="4" cellspacing="4" style="margin-bottom: 5px;"
+! Organisatie
+| {{{Organisatie|}}}
+|-
+! Doelgroep
+| {{{Doelgroep|}}}
+|-
+! Adres
+| {{{Adres|}}}
+|-
+! Postcode
+| {{{Postcode|}}}
+|-
+! Plaats
+| {{{Plaats|}}}
+|-
+! Telefoon
+| {{{Telefoon|}}}
+|-
+! Email
+| {{{Email|}}}
+|-
+! Website
+| {{{Website|}}}
+|}</includeonly>

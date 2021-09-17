@@ -1,0 +1,37 @@
+<noinclude>
+<templatedata>
+{
+	"params": {
+		"Frequentie": {},
+		"Door": {},
+		"Laatst gedaan": {},
+		"Planning": {},
+		"Opmerking": {}
+	},
+	"description": "Dit sjabloon definieert een klus",
+	"format": "block"
+}
+</templatedata>
+{{#cargo_declare: _table=kluslijst
+|Frequentie=String
+|Door=String
+|Laatst_gedaan=String
+|Planning=String
+|Opmerking=String
+}}
+</noinclude><includeonly>{{#cargo_store: _table=kluslijst}}{| border="0" cellpadding="4" cellspacing="4" style="margin-bottom: 5px;"
+! Frequentie
+| {{{Frequentie|}}}
+|-
+! Door
+| {{{Door|}}}
+|-
+! Laatst gedaan
+| {{{Laatst gedaan|}}}
+|-
+! Planning
+| {{{Planning|}}}
+|-
+! Opmerking
+| {{{Opmerking|}}}
+|}</includeonly>

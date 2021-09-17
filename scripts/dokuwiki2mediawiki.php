@@ -179,6 +179,8 @@ function formatUrn($content, $prefix) {
 
 		$urn = ucfirst(implode("/", array_map('ucfirst', explode(':', $parts[0]))));
         $urn = str_replace("_", " ", $urn);
+        $urn = str_replace("cie", "Cie", $urn);
+        $urn = str_replace("viCie", "ViCie", $urn);
 		$urn = str_replace('/Hoofdpagina', '', $urn);
 		$name = $parts[1];
 		// Voorkom drama met tabellen door een placeholder te gebruiken voor |
@@ -187,6 +189,8 @@ function formatUrn($content, $prefix) {
 
 	$urn = ucfirst(implode("/", array_map('ucfirst', explode(':', $content))));
     $urn = str_replace("_", " ", $urn);
+    $urn = str_replace("cie", "Cie", $urn);
+    $urn = str_replace("viCie", "ViCie", $urn);
 	$urn = str_replace('/Hoofdpagina', '', $urn);
 	return $urn;
 }
@@ -228,6 +232,8 @@ if ($argc == 1) {
     $fileParts = str_replace('/', '__', $fileParts);
     $fileParts = str_replace('\\', '__', $fileParts);
     $fileParts = str_replace('__hoofdpagina', '', $fileParts);
+    $fileParts = str_replace('cie', 'Cie', $fileParts);
+    $fileParts = str_replace('viCie', 'ViCie', $fileParts);
 
     $prefix = explode("__", $fileParts);
     $prefix = array_splice($prefix, 0, -1);
@@ -432,6 +438,13 @@ if ($argc == 1) {
         }
         // end rewrite videos
 
+        // Rewrite external links2
+        if (preg_match("/{{http(.+)}}/", $line)) {
+            $line = preg_replace_callback("/{{http(.+)}}/", function ($match) {
+                $link = $match[1];
+                return "[http$link]";
+            }, $line);
+        }
         // Rewrite images
         // {{ ns:subns:file.jpg | Alt}}
         // [[Bestand:ns subns file.jpg |Alt|miniatuur]]
@@ -479,7 +492,7 @@ if ($argc == 1) {
 
         // replace \\
         // thanks to Rakete Kalle
-        $line = preg_replace("/\\\\\\\\(\s*)$/", "<br />", $line);
+        $line = preg_replace("/\\\\\\\\/", "<br />", $line);
         // end of replace \\
 
         // replace //

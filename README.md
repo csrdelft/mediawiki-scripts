@@ -132,8 +132,10 @@ De volgende types bestaan:
 - Data lijsten maken
 - Overige categorie pagina's aanmaken
 - Moeten ge-exporteerde pagina's gecredit worden?
+- Hoofpagina opmaken
 
 ## Pijnpunten
 
 - Dokuwiki staat relatieve pagina-verwijzingen toe, dit zorgt voor problemen bij het converteren. Hierdoor ontstaan er veel rode linkjes
 - imgref bestaat niet in mediawiki
+- Er zijn leden die in de wiki met absolute urls naar bestanden hebben gerefereerd.
