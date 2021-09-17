@@ -1,6 +1,6 @@
 # C.S.R. MediaWiki
 
-Deze repository bevat een aantas scripts om de overstap van DokuWiki naar MediaWiki makkelijker te maken.
+Deze repository bevat een aantal scripts om de overstap van DokuWiki naar MediaWiki makkelijker te maken.
 
 ## Installatie
 
@@ -12,17 +12,25 @@ Deze repository bevat een aantas scripts om de overstap van DokuWiki naar MediaW
 - Kopieer `LocalSettings.php` naar de mediawiki map en loop alle waardes langs.
 - Voer `maintenance/update.php` uit om zeker te zijn dat alle tabellen bestaan.
 - Maak een nieuwe OAuth applicatie in de stek aan en zet de waardes in `LocalSettings.php` goed.
-- Voer de scripts in de `scripts` map uit. Deze scripts hebben een verwijzing naar de dokuwiki en naar de mediawiki map nodig.
+- Voer de `00_run_all.php` in de `scripts` map uit. Dit script heeft een verwijzing naar de dokuwiki en naar de mediawiki map nodig.
+- Voer `php extensions/Cargo/maintenance/cargoRecreateData.php --table motie` uit vanuit de `mediawiki` map.
+- Voer `php maintenance/rebuildall.php` uit vanuit de `mediawiki` map.
 
 ## Scripts
 
-`01_prepare_media.ps1 <dokuwikidir> <mediawikidir>`: Trek media uit dokuwiki en kopieer naar één map.
+`00_run_all.php <dokuwikidir> <mediawikidir>` : Voert alle scripts hier onder uit.
 
-`02_import_media.ps1 <dokuwikidir> <mediawikidir>` : Importeer media in mediawiki
+`01_prepare_media.php <dokuwikidir>`: Trek media uit dokuwiki en kopieer naar één map.
 
-`03_convert_pages.ps1 <dokuwikidir> <mediawikidir>` : Converteer dokuwiki naar mediawiki syntax
+`02_import_media.php <mediawikidir>` : Importeer media in mediawiki
 
-`04_import_pages.ps1 <dokuwikidir> <mediawikidir>` : Importeer sjablonen, categorien en pagina's in mediawiki.
+`03_convert_pages.php <dokuwikidir>` : Converteer dokuwiki naar mediawiki syntax
+
+`04_fix_links.php` : Fixt verkeerde links
+
+`05_import_pages.php <mediawikidir>` : Importeer sjablonen, categorien en pagina's in mediawiki.
+
+`06_recreate_tables.php <mediawikidir>` : Recreeer Cargo tabellen.
 
 ## Extensions
 
@@ -123,6 +131,7 @@ De volgende types bestaan:
 - Overige sjablonen maken voor verschillende data types
 - Data lijsten maken
 - Overige categorie pagina's aanmaken
+- Moeten ge-exporteerde pagina's gecredit worden?
 
 ## Pijnpunten
 

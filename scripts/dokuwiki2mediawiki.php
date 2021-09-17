@@ -20,8 +20,10 @@ $in_dataentry = null;
 $in_imagemap = false;
 
 $skipNS = [
-    'bestuur', 'speeltuin',
+    'bestuur', 'speeltuin', 'wiki',
 ];
+
+$skipPage = ['sidebar'];
 
 $dataEntryMap = [
     'Hv' => 'Huishoudelijke Vergadering',
@@ -156,6 +158,12 @@ $dataEntryKeyMap = [
     ],
 ];
 
+
+function endsWith($haystack, $needle) {
+    $length = strlen($needle);
+    return $length > 0 ? substr($haystack, -$length) === $needle : true;
+}
+
 // |Nummer_hvpage=277
 // |Datum_dt=2011-05-09 #JJJJ-MM-DD
 // |Bestuur_groep=776
@@ -164,14 +172,13 @@ $dataEntryKeyMap = [
 // |groepdecharges_groeps=1000, 912, 797, 750, 704,
 
 function formatUrn($content, $prefix) {
-    $content = str_replace('..:', $prefix, $content);
-    $content = str_replace('..', $prefix, $content);
-    $content = str_replace('.', $prefix, $content);
+    $content = preg_replace('/^\.\.?/', '', $content);
 
 	if (preg_match('/\|/', $content)) {
 		$parts = explode("|", $content);
 
 		$urn = ucfirst(implode("/", array_map('ucfirst', explode(':', $parts[0]))));
+        $urn = str_replace("_", " ", $urn);
 		$urn = str_replace('/Hoofdpagina', '', $urn);
 		$name = $parts[1];
 		// Voorkom drama met tabellen door een placeholder te gebruiken voor |
@@ -179,6 +186,7 @@ function formatUrn($content, $prefix) {
 	}
 
 	$urn = ucfirst(implode("/", array_map('ucfirst', explode(':', $content))));
+    $urn = str_replace("_", " ", $urn);
 	$urn = str_replace('/Hoofdpagina', '', $urn);
 	return $urn;
 }
@@ -208,6 +216,8 @@ if ($argc == 1) {
         while (!feof($inputfile)) {
             $lines[$i++] = fgets($inputfile); //we start counting a 0
         }
+        // Add empty line at the end to handle tables at the very end of the page.
+        $lines[$i++] = "";
         fclose($inputfile);
     }
     $linecount = $i;
@@ -217,6 +227,7 @@ if ($argc == 1) {
     $fileParts = str_replace('.txt', '', $outputFilePath);
     $fileParts = str_replace('/', '__', $fileParts);
     $fileParts = str_replace('\\', '__', $fileParts);
+    $fileParts = str_replace('__hoofdpagina', '', $fileParts);
 
     $prefix = explode("__", $fileParts);
     $prefix = array_splice($prefix, 0, -1);
@@ -224,6 +235,13 @@ if ($argc == 1) {
 
     foreach ($skipNS as $skip) {
         if (strpos($fileParts, $skip) === 0) {
+            echo "Skip $fileParts\n";
+            exit;
+        }
+    }
+
+    foreach ($skipPage as $skip) {
+        if (endsWith($fileParts, $skip)) {
             echo "Skip $fileParts\n";
             exit;
         }
@@ -246,7 +264,7 @@ if ($argc == 1) {
 
             if (strpos($line, '<!--') === 0) continue;
 
-            $parts = explode(":", $line);
+            $parts = explode(":", $line, 2);
             $key = ucfirst(trim($parts[0]));
 
             if (!$key) continue;
@@ -446,7 +464,11 @@ if ($argc == 1) {
                 $title = formatUrn(trim($match[2]), $prefix);
                 $next = formatUrn(trim($match[3]), $prefix);
 
-                return "{{Nav | title = [[$title|]] | previous = [[$prev|]] | next = [[$next|]]}}";
+                $prev = empty($prev) ? "" : "[[$prev|]]";
+                $title = empty($title) ? "" : "[[$title|]]";
+                $next = empty($next) ? "" : "[[$next|]]";
+
+                return "{{Nav | title = $title | previous = $prev | next = $next}}";
             }, $line);
         }
         // end rewrite nav
@@ -606,7 +628,7 @@ if ($argc == 1) {
 
     echo "Created " . $fileParts . PHP_EOL;
     $outputfile = fopen($tempDir . $fileParts . ".mod", "w");
-    fwrite($outputfile, $output);
+    fwrite($outputfile, trim($output) . "\n");
     fclose($outputfile);
 }
 ?>

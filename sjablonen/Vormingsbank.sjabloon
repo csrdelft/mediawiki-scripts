@@ -22,7 +22,7 @@
 |Collegejaar=String
 |Rubriek=String
 |Activiteit=String
-|Datum=Date
+|Datum=String
 |Webstek=String
 |Vergelijkbaar=String
 |Semester=String

@@ -1,0 +1,9 @@
+<div style="padding: .3em 0; margin: 1em 0; border: solid #a2a9b1; border-width:1px 0; background: #f8f9fa; font-size: 90%;">
+<table style="width:100%;">
+<tr>
+<td style="width:33%; text-align:left;"><span style="padding-right: 10px;">&lt;</span>{{{previous}}}</td>
+<td style="width:34%; text-align:center; font-weight: bold;">{{{title}}}</td>
+<td style="width:33%; text-align:right;">{{{next}}}<span style="padding-left: 10px;">&gt;</span></td>
+</tr>
+</table>
+</div>

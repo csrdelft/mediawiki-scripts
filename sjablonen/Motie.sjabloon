@@ -52,8 +52,8 @@
 }
 </templatedata>
 {{#cargo_declare: _table=motie
-|HV_Nummer=Integer
-|Nummer=Integer
+|HV_Nummer=String
+|Nummer=String
 |Datum=String
 |Einddatum=String
 |Besluit=String
