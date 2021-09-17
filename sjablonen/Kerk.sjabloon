@@ -1,0 +1,54 @@
+<noinclude>
+<templatedata>
+{
+	"params": {
+		"Kerknaam": {
+			"required": true
+		},
+		"Denominatie": {},
+		"Website": {},
+		"Grootte": {},
+		"Kerkverband": {},
+		"Voorganger": {},
+		"Contactpersoon": {},
+		"Aanvangstijd viering zondag": {}
+	},
+	"description": "Dit sjabloon definieert een kerk",
+	"format": "block"
+}
+</templatedata>
+{{#cargo_declare: _table=kerk
+|Kerknaam=String
+|Denominatie=String
+|Website=String
+|Grootte=String
+|Kerkverband=String
+|Voorganger=String
+|Contactpersoon=String
+|Aanvangstijd_viering_zondag=String
+}}
+</noinclude><includeonly>{{#cargo_store: _table=kerk}}{| border="0" cellpadding="4" cellspacing="4" style="margin-bottom: 5px;"
+! Kerknaam
+| {{{Kerknaam|}}}
+|-
+! Denominatie
+| {{{Denominatie|}}}
+|-
+! Website
+| {{{Website|}}}
+|-
+! Grootte
+| {{{Grootte|}}}
+|-
+! Kerkverband
+| {{{Kerkverband|}}}
+|-
+! Voorganger
+| {{{Voorganger|}}}
+|-
+! Contactpersoon
+| {{{Contactpersoon|}}}
+|-
+! Aanvangstijd viering zondag
+| {{{Aanvangstijd viering zondag|}}}
+|}</includeonly>

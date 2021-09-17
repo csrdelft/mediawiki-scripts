@@ -1,0 +1,44 @@
+<noinclude>
+<templatedata>
+{
+	"params": {
+		"Nummer": {
+			"type": "number",
+			"required": true
+		},
+		"Datum": {
+			"type": "date",
+			"required": true
+		},
+		"Bestuur": {
+			"description": "Het bestuur dat verantwoordelijk was voor deze vergadering.",
+			"type": "wiki-page-name",
+			"required": true
+		},
+		"Notulen": {
+			"type": "wiki-file-name",
+			"required": true
+		}
+	},
+	"description": "Dit sjabloon definieert een Huishoudelijke Vergadering."
+}
+</templatedata>
+{{#cargo_declare: _table=huishoudelijke_vergadering
+|Nummer=Integer
+|Datum=Date
+|Bestuur=Page
+|Notulen=File
+}}
+</noinclude><includeonly>{{#cargo_store: _table=huishoudelijke_vergadering}}{| border="0" cellpadding="4" cellspacing="4" style="margin-bottom: 5px;"
+! Nummer
+| {{{Nummer|}}}
+|-
+! Datum
+| {{{Datum|}}}
+|-
+! Bestuur
+| [[{{{Bestuur|}}}]]
+|-
+! Notulen
+| {{{Notulen|}}}
+|}</includeonly>

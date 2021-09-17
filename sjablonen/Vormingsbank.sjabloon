@@ -1,0 +1,57 @@
+<noinclude>
+<templatedata>
+{
+	"params": {
+		"Titel": {},
+		"Door": {},
+		"Collegejaar": {},
+		"Rubriek": {},
+		"Activiteit": {},
+		"Datum": {},
+		"Webstek": {},
+		"Vergelijkbaar": {},
+		"Semester": {}
+	},
+	"description": "Dit sjabloon definieert een pagina in de vormingsbank",
+	"format": "block"
+}
+</templatedata>
+{{#cargo_declare: _table=vormingsbank
+|Titel=String
+|Door=String
+|Collegejaar=String
+|Rubriek=String
+|Activiteit=String
+|Datum=Date
+|Webstek=String
+|Vergelijkbaar=String
+|Semester=String
+}}
+</noinclude><includeonly>{{#cargo_store: _table=vormingsbank}}{| border="0" cellpadding="4" cellspacing="4" style="margin-bottom: 5px;"
+! Titel
+| {{{Titel|}}}
+|-
+! Door
+| {{{Door|}}}
+|-
+! Collegejaar
+| {{{Collegejaar|}}}
+|-
+! Rubriek
+| {{{Rubriek|}}}
+|-
+! Activiteit
+| {{{Activiteit|}}}
+|-
+! Datum
+| {{{Datum|}}}
+|-
+! Webstek
+| {{{Webstek|}}}
+|-
+! Vergelijkbaar
+| {{{Vergelijkbaar|}}}
+|-
+! Semester
+| {{{Semester|}}}
+|}</includeonly>

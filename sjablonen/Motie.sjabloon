@@ -1,0 +1,92 @@
+<noinclude>
+<templatedata>
+{
+	"params": {
+		"Datum": {
+			"type": "date",
+			"required": true
+		},
+		"Einddatum": {
+			"type": "date"
+		},
+		"Besluit": {
+			"description": "Aangenomen of Verworpen"
+		},
+		"Geldigheid": {
+			"description": "Actief, Voorlopig nog actief, Verlopen, Vervangen, Nooit"
+		},
+		"Labels": {
+			"description": "Opsomming met komma's ertussen",
+			"type": "unknown"
+		},
+		"Relevantie": {
+			"description": "Serieus of Niet-serieus",
+			"type": "line",
+			"required": true
+		},
+		"Nummer": {
+			"description": "Volgnummer van deze motie",
+			"type": "number",
+			"required": true
+		},
+		"HV Nummer": {
+			"label": "Huishoudelijke Vergadering",
+			"type": "number",
+			"required": true
+		},
+		"Ondertekend door": {}
+	},
+	"description": "Dit sjabloon definieert een motie",
+	"paramOrder": [
+		"HV Nummer",
+		"Nummer",
+		"Datum",
+		"Einddatum",
+		"Besluit",
+		"Geldigheid",
+		"Labels",
+		"Relevantie",
+		"Ondertekend door"
+	],
+	"format": "block"
+}
+</templatedata>
+{{#cargo_declare: _table=motie
+|HV_Nummer=Integer
+|Nummer=Integer
+|Datum=String
+|Einddatum=String
+|Besluit=String
+|Geldigheid=String
+|Labels=List (,) of String
+|Relevantie=String
+|Ondertekend_door=List (,) of String
+}}
+</noinclude><includeonly>{{#cargo_store: _table=motie}}{| border="0" cellpadding="4" cellspacing="4" style="margin-bottom: 5px;"
+! Huishoudelijke Vergadering
+| {{{HV Nummer|}}}
+|-
+! Nummer
+| {{{Nummer|}}}
+|-
+! Datum
+| {{{Datum|}}}
+|-
+! Eind Datum
+| {{{Einddatum|}}}
+|-
+! Besluit
+| {{{Besluit|}}}
+|-
+! Geldigheid
+| {{{Geldigheid|}}}
+|-
+! Labels
+| {{{Labels|}}}
+|-
+! Relevantie
+| {{{Relevantie|}}}
+|-
+! Ondertekend door
+| {{{Ondertekend door|}}}
+|}</includeonly>

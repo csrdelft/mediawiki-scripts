@@ -1,0 +1,39 @@
+<noinclude>
+<templatedata>
+{
+	"params": {
+		"Naam": {},
+		"Typering": {},
+		"Gang": {},
+		"Omschrijving": {},
+		"Aantal personen": {
+			"type": "number"
+		}
+	},
+	"description": "Dit sjabloon definieert een recept",
+	"format": "block"
+}
+</templatedata>
+{{#cargo_declare: _table=recept
+|Naam=String
+|Typering=String
+|Gang=String
+|Omschrijving=String
+|Aantal_personen=Integer
+}}
+</noinclude><includeonly>{{#cargo_store: _table=recept}}{| border="0" cellpadding="4" cellspacing="4" style="margin-bottom: 5px;"
+! Naam
+| {{{Naam|}}}
+|-
+! Typering
+| {{{Typering|}}}
+|-
+! Gang
+| {{{Gang|}}}
+|-
+! Omschrijving
+| {{{Omschrijving|}}}
+|-
+! Aantal personen
+| {{{Aantal personen|}}}
+|}</includeonly>
