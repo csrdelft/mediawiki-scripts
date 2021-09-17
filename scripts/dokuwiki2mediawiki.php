@@ -210,6 +210,7 @@ if ($argc == 1) {
 
 	$cells = [];
 	$headers = '';
+    $listLevels = [];
 
     $pagesDir = $argv[1];
     $filename = $argv[2];
@@ -353,30 +354,47 @@ if ($argc == 1) {
         }
         // end of replace headings
 
-        // replace bulletpoints
-        $level = 0; // level of bulletpoints, e.g. * is level 1, *** is level 3.
-        while (preg_match('/^(  )+\*/', $line)) {
-            $line = preg_replace("/^  /", "", $line);
-            $level++;
-        }
-        while ($level > 1) {
-            $line = "*" . $line;
-            $level--;
-        }
-        // end of replace bulletpoints
+        // replace **
+        $line = preg_replace("/\*\*/", "'''", $line);
+        // end of replace **
 
-        // replace ordered list items
-        $level = 0; // level of list items, e.g. - is level 1, --- is level 3.
-        while (preg_match('/^( {2})+\-/', $line)) {
-            $line = preg_replace("/^ {2}/", "", $line);
-            $level++;
-            $line = preg_replace("/^-/", "#", $line);
+
+        // EITHER bullets or ordered
+        if (preg_match('/^(  )+\*/', $line)) {
+            // replace bulletpoints
+            $level = 0; // level of bulletpoints, e.g. * is level 1, *** is level 3.
+            while (preg_match('/^( {2})+\*/', $line)) {
+                $line = preg_replace("/^ {2}/", "", $line);
+                $level++;
+            }
+            while (preg_match('/^\*/', $line)) {
+                $line = preg_replace('/^\*/', '', $line);
+            }
+            if ($level !== 0) $listLevels[$level] = "*";
+            while ($level > 0) {
+                $newLevel = $listLevels[$level];
+                $line = $listLevels[$level] . $line;
+                $level--;
+            }
+            // end of replace bulletpoints
+        } else {
+            // replace ordered list items
+            $level = 0; // level of list items, e.g. - is level 1, --- is level 3.
+            while (preg_match('/^( {2})+\-/', $line)) {
+                $line = preg_replace("/^ {2}/", "", $line);
+                $level++;
+                $line = preg_replace("/^-/", "#", $line);
+            }
+            while (preg_match('/^#/', $line)) {
+                $line = preg_replace('/^#/', '', $line);
+            }
+            if ($level !== 0) $listLevels[$level] = "#";
+            while ($level > 0) {
+                $line = $listLevels[$level] . $line;
+                $level--;
+            }
         }
 
-        while ($level > 1) {
-            $line = "#" . $line;
-            $level--;
-        }
         // end of replace ordered list items
 
         // Rewrite external links
@@ -485,10 +503,6 @@ if ($argc == 1) {
             }, $line);
         }
         // end rewrite nav
-
-        // replace **
-        $line = preg_replace("/\*\*/", "'''", $line);
-        // end of replace **
 
         // replace \\
         // thanks to Rakete Kalle
