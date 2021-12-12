@@ -27,17 +27,17 @@ $wgMetaNamespace = "C.S.R._Wiki";
 ## For more information on customizing the URLs
 ## (like /w/index.php/Page_title to /wiki/Page_title) please see:
 ## https://www.mediawiki.org/wiki/Manual:Short_URL
-$wgScriptPath = "/mediawiki";
+$wgScriptPath = "";
 
 ## The protocol and server name to use in fully-qualified URLs
-$wgServer = "http://dev-csrdelft.nl";
+$wgServer = "http://wiki.csrdelft.nl";
 
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
 ## The URL paths to the logo.  Make sure you change this from the default,
 ## or else you'll overwrite your logo when you upgrade!
-$wgLogos = [ '1x' => "/images/beeldmerk_192.png" ];
+$wgLogos = [ '1x' => "https://csrdelft.nl/images/c.s.r.logo.svg" ];
 
 ## UPO means: this is also a user preference option
 
@@ -119,6 +119,8 @@ $wgRightsUrl = "";
 $wgRightsText = "";
 $wgRightsIcon = "";
 
+$wgNamespacesWithSubpages[NS_MAIN] = true;
+
 # Path to the GNU diff3 utility. Used for conflict resolution.
 $wgDiff3 = "";
 
@@ -153,23 +155,25 @@ wfLoadExtension( 'TemplateData' );
 wfLoadExtension( 'URNames' );
 wfLoadExtension( 'VisualEditor' );
 wfLoadExtension( 'WSOAuth' );
+wfLoadExtension( 'Cargo' );
 
 $wgGroupPermissions['*']['autocreateaccount'] = true;
 $wgGroupPermissions['*']['editmyprivateinfo'] = false;
-$wgPluggableAuth_EnableLocalLogin = true;
+$wgGroupPermissions['*']['recreatecargodata'] = true;
+$wgPluggableAuth_EnableLocalLogin = false;
 
 # End of automatically generated settings.
 # Add more configuration options below.
-$wgOAuthUri = "http://dev-csrdelft.nl/authorize";
+$wgOAuthUri = "https://csrdelft.nl/authorize";
 $wgOAuthClientId = "wiki";
 $wgOAuthClientSecret = "<changeme>";
 $wgOAuthAuthProvider = 'csr';
-$wgOAuthRedirectUri = 'http://dev-csrdelft.nl/mediawiki/index.php/Special:PluggableAuthLogin';
+$wgOAuthRedirectUri = 'https://wiki.csrdelft.nl/index.php/Special:PluggableAuthLogin';
 $wgOAuthCustomAuthProviders = [
 	'csr' => \AuthenticationProvider\CsrAuth::class,
 ];
 $wgRealnamesLinkStyle = "replace";
-$wgOAuthCsrBaseUrl = 'http://dev-csrdelft.nl';
+$wgOAuthCsrBaseUrl = 'http://csrdelft.nl';
 $wgMFDefaultSkinClass = 'SkinMinerva';
 $wgFileExtensions = ['png', 'gif', 'jpg', 'jpeg', 'doc',
 	'xls', 'mpp', 'pdf', 'ppt', 'tiff', 'bmp', 'docx', 'xlsx',

@@ -43,6 +43,7 @@ Deze repository bevat een aantal scripts om de overstap van DokuWiki naar MediaW
 - [WSOAuth](https://www.mediawiki.org/wiki/Extension:WSOAuth)
 - [MobileFrontend](https://www.mediawiki.org/wiki/Extension:MobileFrontend)
 - [Cargo](https://www.mediawiki.org/wiki/Extension:Cargo)
+- [intersection (DynamicPageList)](https://www.mediawiki.org/wiki/Extension:DynamicPageList_(Wikimedia))
 
 ### Eigen extensies
 
@@ -139,3 +140,10 @@ De volgende types bestaan:
 - Dokuwiki staat relatieve pagina-verwijzingen toe, dit zorgt voor problemen bij het converteren. Hierdoor ontstaan er veel rode linkjes
 - imgref bestaat niet in mediawiki
 - Er zijn leden die in de wiki met absolute urls naar bestanden hebben gerefereerd.
+
+## Handwerk
+
+- Categoriseren van pagina's voor de hoofdpagina
+    - Sjaarscommissie
+    - Commissie
+- Rode linkjes nalopen

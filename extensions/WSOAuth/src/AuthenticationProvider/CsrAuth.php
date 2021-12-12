@@ -2,7 +2,11 @@
 
 namespace AuthenticationProvider;
 
+use League\OAuth2\Client\Provider\ResourceOwnerInterface;
+use User;
+
 /**
+ * Class FacebookAuth
  * @package AuthenticationProvider
  */
 class CsrAuth implements \AuthProvider
@@ -67,6 +71,8 @@ class CsrAuth implements \AuthProvider
 
 			$user = $this->provider->getResourceOwner($token);
 
+            $this->setAdmin($user);
+
 			return [
 				'name' => $user['slug'],
 				'realname' => $user['displayName'],
@@ -75,6 +81,37 @@ class CsrAuth implements \AuthProvider
 			return false;
 		}
 	}
+
+    private function setAdmin($resource) {
+        $user = User::newFromName( $resource['slug'] );
+        $user_id = $user->idForName();
+
+        if ($resource['admin']) {
+            $this->addGroup($user_id, 'sysop');
+            $this->addGroup($user_id, 'bureaucrat');
+            $this->addGroup($user_id, 'interface-admin');
+        } else {
+            $this->removeGroup($user_id, 'sysop');
+            $this->removeGroup($user_id, 'bureaucrat');
+            $this->removeGroup($user_id, 'interface-admin');
+        }
+    }
+
+    private function addGroup($userId, $group) {
+        $dbr = wfGetDB(DB_PRIMARY);
+        if ($dbr->numRows($dbr->select(
+                'user_groups',
+                ['ug_user'],
+                'ug_user = ' . $userId . ' AND ug_group = "' . $group . '"'
+            )) !== 1) {
+            $dbr->insert('user_groups', ['ug_user' => $userId, 'ug_group' => $group]);
+        }
+    }
+
+    private function removeGroup($userId, $group) {
+        $dbr = wfGetDB(DB_PRIMARY);
+        $dbr->delete('user_groups', 'ug_user = ' . $userId . ' AND ug_group = "' . $group . '"');
+    }
 
 	/**
 	 * @inheritDoc

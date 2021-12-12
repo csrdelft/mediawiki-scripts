@@ -18,6 +18,7 @@
 $in_table = false;
 $in_dataentry = null;
 $in_imagemap = false;
+$in_datalist = false;
 
 $skipNS = [
     'bestuur', 'speeltuin', 'wiki',
@@ -171,28 +172,31 @@ function endsWith($haystack, $needle) {
 // |groepinstallaties_groeps=960, 933, 1027, 954, 46, 1017,
 // |groepdecharges_groeps=1000, 912, 797, 750, 704,
 
-function formatUrn($content, $prefix) {
+function formatUrn($content) {
+	$urn = ucfirst(implode("/", array_map('ucfirst', explode(':', $content))));
+    $urn = str_replace("_", " ", $urn);
+    $urn = str_replace("cie", "Cie", $urn);
+    $urn = str_replace("viCie", "ViCie", $urn);
+    $urn = str_replace("Owee", "OWee", $urn);
+	$urn = str_replace('/Hoofdpagina', '', $urn);
+    $urn = str_replace('Leo', 'LeO', $urn);
+    $urn = str_replace('Nbg', 'NBG', $urn);
+	return trim($urn, '/');
+}
+
+function formatLink($content) {
     $content = preg_replace('/^\.\.?/', '', $content);
 
 	if (preg_match('/\|/', $content)) {
 		$parts = explode("|", $content);
 
-		$urn = ucfirst(implode("/", array_map('ucfirst', explode(':', $parts[0]))));
-        $urn = str_replace("_", " ", $urn);
-        $urn = str_replace("cie", "Cie", $urn);
-        $urn = str_replace("viCie", "ViCie", $urn);
-		$urn = str_replace('/Hoofdpagina', '', $urn);
+        $urn = formatUrn($parts[0]);
 		$name = $parts[1];
 		// Voorkom drama met tabellen door een placeholder te gebruiken voor |
 		return $urn . "'linkpipe'" . $name;
 	}
 
-	$urn = ucfirst(implode("/", array_map('ucfirst', explode(':', $content))));
-    $urn = str_replace("_", " ", $urn);
-    $urn = str_replace("cie", "Cie", $urn);
-    $urn = str_replace("viCie", "ViCie", $urn);
-	$urn = str_replace('/Hoofdpagina', '', $urn);
-	return $urn;
+	return formatUrn($content);
 }
 
 if ($argc == 1) {
@@ -210,7 +214,7 @@ if ($argc == 1) {
 
 	$cells = [];
 	$headers = '';
-    $listLevels = [];
+    $listLevels = ['','','','',];
 
     $pagesDir = $argv[1];
     $filename = $argv[2];
@@ -235,10 +239,9 @@ if ($argc == 1) {
     $fileParts = str_replace('__hoofdpagina', '', $fileParts);
     $fileParts = str_replace('cie', 'Cie', $fileParts);
     $fileParts = str_replace('viCie', 'ViCie', $fileParts);
-
-    $prefix = explode("__", $fileParts);
-    $prefix = array_splice($prefix, 0, -1);
-    $prefix = implode(":", $prefix) . ':';
+    $fileParts = str_replace('Owee', 'OWee', $fileParts);
+    $fileParts = str_replace('Leo', 'LeO', $fileParts);
+    $fileParts = str_replace('Nbg', 'NBG', $fileParts);
 
     foreach ($skipNS as $skip) {
         if (strpos($fileParts, $skip) === 0) {
@@ -290,6 +293,18 @@ if ($argc == 1) {
             continue;
         }
 
+        if ($in_datalist) {
+            if (preg_match("/HVnummer=(\d+)/", $line, $matches)) {
+                $hvNummer = $matches[1];
+                $output .= "{{Motie lijst|$hvNummer}}";
+            }
+
+            if (preg_match('/----/', $line)) {
+                $in_datalist = false;
+            }
+            continue;
+        }
+
         if ($in_imagemap) {
             if (preg_match('/\{\{\<map}}/', $line)) {
                 $in_imagemap = false;
@@ -301,7 +316,7 @@ if ($argc == 1) {
             if (trim($line) == "") continue;
 
             if (preg_match('/\s*\*\s*\[\[([^|]+)\|([^@]+)@([^]]+)]]/', $line, $matches)) {
-                $link = formatUrn(trim($matches[1]), $prefix);
+                $link = formatLink(trim($matches[1]));
                 $title = trim($matches[2]);
                 $coords = trim($matches[3]);
 
@@ -401,11 +416,13 @@ if ($argc == 1) {
         if (preg_match('/\[\[http/', $line)) {
             $line = preg_replace_callback('/\[\[http([^]|]+)(\|[^]]*)?]]/', function ($match) {
                 $url = $match[1];
+                // Replace any leftover spaces, they break the url
+                $url = str_replace(' ', '%20', $url);
                 $text = '';
                 if (isset($match[2])) {
-                    $text = str_replace('|', "'linkpipe'", $match[2]);
+                    $text = str_replace('|', "", $match[2]);
                 }
-                return "[http$url$text]";
+                return "[http$url $text]";
             }, $line);
         }
         // end rewrite external links
@@ -414,18 +431,18 @@ if ($argc == 1) {
         // [[cie:diensten:hosting|test]] wordt [[Cie/Diensten/Hosting|test]]
         // [[cie:diensten:hoofdpagina]] wordt [[Cie/Diensten]]
         if (preg_match('/\[\[(.+?)]]/', $line, $matches)) {
-            $line = preg_replace_callback('/\[\[(.+?)]]/', function ($match) use ($prefix) {
+            $line = preg_replace_callback('/\[\[(.+?)]]/', function ($match) {
                 $content = $match[1];
                 if (preg_match('/\|/', $content)) {
                     $parts = explode("|", $content);
 
-                    $urn = formatUrn($parts[0], $prefix);
+                    $urn = formatLink($parts[0]);
                     $name = $parts[1];
                     // Voorkom drama met tabellen door een placeholder te gebruiken voor |
                     return "[[{$urn}'linkpipe'{$name}]]";
                 }
 
-                $urn = formatUrn($content, $prefix);
+                $urn = formatLink($content);
                 return "[[$urn]]";
             }, $line);
         }
@@ -490,10 +507,10 @@ if ($argc == 1) {
         //
         // <- lichtingen:2018:hoofdpagina ^ lichtingen:hoofdpagina ^ lichtingen:2020:hoofdpagina ->
         if (preg_match("/<-([^^]*)\^([^^]*)\^([^-]*)->/", $line)) {
-            $line = preg_replace_callback("/<-([^^]*)\^([^^]*)\^([^-]*)->/", function ($match) use ($prefix) {
-                $prev = formatUrn(trim($match[1]), $prefix);
-                $title = formatUrn(trim($match[2]), $prefix);
-                $next = formatUrn(trim($match[3]), $prefix);
+            $line = preg_replace_callback("/<-([^^]*)\^([^^]*)\^([^-]*)->/", function ($match) {
+                $prev = formatLink(trim($match[1]));
+                $title = formatLink(trim($match[2]));
+                $next = formatLink(trim($match[3]));
 
                 $prev = empty($prev) ? "" : "[[$prev|]]";
                 $title = empty($title) ? "" : "[[$title|]]";
@@ -537,19 +554,10 @@ if ($argc == 1) {
         }
 
         // begin dataentry
-        // ---- dataentry hv ----
-        // Nummer_hvpage         : 281
-        // Datum_dt             : 2011-10-27 #JJJJ-MM-DD
-        // Bestuur_groep          : 956
-        // Notulen_docs              : 643, 644,  #nummers van documenten op csrdelft.nl
-        // groepinstallaties_groeps    : 1140, 961, 1177, 1162, 1183, 
-        // groepdecharges_groeps       : 960, 907, 
-        // ----
-        if (preg_match("/---- datalist (.+) ----/", $line, $matches)) {
+        if (preg_match("/---- datalist motie ----/", $line, $matches)) {
             $in_datalist = true;
+            // Alleen datalist motie wordt gebruikt
             
-            $dataentryType = $matches[1];
-            $output .= '{{' . "$dataentryType lijst legacy\n";
             continue;
         }
 

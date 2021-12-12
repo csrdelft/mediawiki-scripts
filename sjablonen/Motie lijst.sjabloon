@@ -1,15 +1,13 @@
-<includeonly>{{#cargo_query:tables=motie
-|where=hv = {{{hv}}}
-|fields=_pageName=Motie,Datum,Einddatum,Besluit,Geldigheid,Labels,Relevantie
+<includeonly>{{#cargo_query: tables=motie
+|fields=_pageName=Motie,Nummer,Besluit,Geldigheid,Labels,Relevantie
+|orderby=Nummer
+|where=HV_Nummer={{{1}}}
 }}</includeonly>
 <noinclude>
 <templatedata>
 {
 	"params": {
-		"hv": {
-			"type": "number",
-			"required": true
-		}
+		"1": {}
 	},
 	"description": "Dit sjabloon wordt gebruikt om een lijst moties te laden bij een hv."
 }
