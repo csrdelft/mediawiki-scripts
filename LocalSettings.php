@@ -157,6 +157,20 @@ wfLoadExtension( 'VisualEditor' );
 wfLoadExtension( 'WSOAuth' );
 wfLoadExtension( 'Cargo' );
 
+define('NS_BESTUUR', 100);
+define('NS_BESTUUR_TALK', 101);
+
+$wgExtraNamespaces[NS_BESTUUR] = 'Bestuur';
+$wgExtraNamespaces[NS_BESTUUR_TALK] = 'Bestuur_talk';
+
+$wgNamespacePermissionLockdown[NS_BESTUUR]['*'] = [ 'bestuur' ];
+$wgNamespacePermissionLockdown[NS_BESTUUR_TALK]['*'] = [ 'bestuur' ];
+
+$wgNonincludableNamespaces[] = NS_BESTUUR;
+$wgNonincludableNamespaces[] = NS_BESTUUR_TALK;
+
+$wgGroupPermissions['bestuur']['read'] = true;
+
 $wgGroupPermissions['*']['autocreateaccount'] = true;
 $wgGroupPermissions['*']['editmyprivateinfo'] = false;
 $wgGroupPermissions['*']['recreatecargodata'] = true;

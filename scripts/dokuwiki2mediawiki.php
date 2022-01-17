@@ -21,8 +21,10 @@ $in_imagemap = false;
 $in_datalist = false;
 
 $skipNS = [
-    'bestuur', 'speeltuin', 'wiki',
+    'speeltuin', 'wiki',
 ];
+
+$specialNS = ['bestuur'];
 
 $skipPage = ['sidebar'];
 
@@ -181,6 +183,7 @@ function formatUrn($content) {
 	$urn = str_replace('/Hoofdpagina', '', $urn);
     $urn = str_replace('Leo', 'LeO', $urn);
     $urn = str_replace('Nbg', 'NBG', $urn);
+    $urn = str_replace('Bestuur/', "Bestuur'linkcolon'", $urn);
 	return trim($urn, '/');
 }
 
@@ -242,6 +245,8 @@ if ($argc == 1) {
     $fileParts = str_replace('Owee', 'OWee', $fileParts);
     $fileParts = str_replace('Leo', 'LeO', $fileParts);
     $fileParts = str_replace('Nbg', 'NBG', $fileParts);
+
+    $fileParts = str_replace("bestuur__", "bestuur;", $fileParts);
 
     foreach ($skipNS as $skip) {
         if (strpos($fileParts, $skip) === 0) {
@@ -644,6 +649,7 @@ if ($argc == 1) {
         // end care for tables
 
         $line = preg_replace("/'linkpipe'/", "|", $line);
+        $line = preg_replace("/'linkcolon'/", ":", $line);
 
         $output .= $line;
     } //while (++$i<$linecount)
@@ -652,7 +658,7 @@ if ($argc == 1) {
     $output .= "\n\n[[Categorie:Geimporteerd]]";
 
 
-    $categories = explode("__", $fileParts);
+    $categories = explode("__", str_replace(";", ":", $fileParts));
     $laatsteCat = array_pop($categories);
 
     foreach ($categories as $category) {

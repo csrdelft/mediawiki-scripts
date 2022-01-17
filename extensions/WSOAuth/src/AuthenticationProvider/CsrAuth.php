@@ -35,7 +35,7 @@ class CsrAuth implements \AuthProvider
 	public function login(&$key, &$secret, &$auth_url)
 	{
 		$auth_url = $this->provider->getAuthorizationUrl([
-			'scope' => ['PROFIEL:EMAIL']
+			'scope' => ['PROFIEL:EMAIL WIKI:BESTUUR']
 		]);
 
 		$secret = $this->provider->getState();
@@ -64,14 +64,11 @@ class CsrAuth implements \AuthProvider
 		}
 
 		try {
-			$token = $this->provider->getAccessToken('authorization_code', [
-				'code' => $_GET['code'],
-				'scope' => ['PROFIEL:EMAIL']
-			]);
+			$token = $this->provider->getAccessToken('authorization_code', ['code' => $_GET['code']]);
 
 			$user = $this->provider->getResourceOwner($token);
 
-            $this->setAdmin($user);
+            $this->setGroups($user);
 
 			return [
 				'name' => $user['slug'],
@@ -82,7 +79,7 @@ class CsrAuth implements \AuthProvider
 		}
 	}
 
-    private function setAdmin($resource) {
+    private function setGroups($resource) {
         $user = User::newFromName( $resource['slug'] );
         $user_id = $user->idForName();
 
@@ -94,6 +91,12 @@ class CsrAuth implements \AuthProvider
             $this->removeGroup($user_id, 'sysop');
             $this->removeGroup($user_id, 'bureaucrat');
             $this->removeGroup($user_id, 'interface-admin');
+        }
+
+        if (in_array('WIKI:BESTUUR', $resource['scopes'])) {
+            $this->addGroup($user_id, 'bestuur');
+        } else {
+            $this->removeGroup($user_id, 'bestuur');
         }
     }
 

@@ -21,6 +21,7 @@ $lowerFilenames = [];
 
 function formatFileName($filename) {
     $formattedFileName = basename($filename, '.mod');
+    $formattedFileName = implode(":", array_map('ucfirst', explode(";", $formattedFileName)));
     $formattedFileName = implode("/", array_map('ucfirst', explode("__", $formattedFileName)));
     $formattedFileName = str_replace("_", " ", $formattedFileName);
 
